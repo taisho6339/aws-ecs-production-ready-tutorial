@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ECR Provisioning Template
+
+Resources:
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/ecs-sample-project/f2d77f0d6fa5b632683a03742c66dac3.template
+      Parameters:
+        Name:
+          Ref: AWS::StackName
+        VpcCIDR: 10.215.0.0/16
+        Subnet1CIDR: 10.215.10.0/24
+        Subnet2CIDR: 10.215.20.0/24
+  LoadBalancer:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/ecs-sample-project/ba55dc4140be0078067f2388f7d12507.template
+      Parameters:
+        VpcId:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.VpcId
+        Subnets:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.Subnets
+  Cluster:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/ecs-sample-project/6588095febaacbee9e22563b23c4da0e.template
+      Parameters:
+        Environment: dev
+        VpcId:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.VpcId
+        SourceSecurityGroup:
+          Fn::GetAtt:
+            - LoadBalancer
+            - Outputs.SecurityGroup
+        Subnets:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.Subnets
+  Service:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/ecs-sample-project/4a1dc7303250dd3108e6d94d2966e5ee.template
+      Parameters:
+        Cluster:
+          Fn::GetAtt:
+            - Cluster
+            - Outputs.ClusterName
+        TargetGroup:
+          Fn::GetAtt:
+            - LoadBalancer
+            - Outputs.TargetGroup
+        Subnets:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.Subnets
