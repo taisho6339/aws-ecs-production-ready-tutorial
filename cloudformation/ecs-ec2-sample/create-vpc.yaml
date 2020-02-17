@@ -27,7 +27,7 @@ Resources:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
-        - Name: Name
+        - Key: Name
           Value: !Ref Name
 
   InternetGatewayAttachment:
@@ -88,3 +88,9 @@ Resources:
     Properties:
       RouteTableId: !Ref RouteTable
       SubnetId: !Ref Subnet2
+
+Outputs:
+  Subnets:
+    Value: !Join [ ",", [ !Ref Subnet1, !Ref Subnet2 ] ]
+  VpcId:
+    Value: !Ref VPC

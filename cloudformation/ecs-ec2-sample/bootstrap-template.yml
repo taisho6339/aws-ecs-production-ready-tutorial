@@ -5,17 +5,18 @@ Resources:
   VPC:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/ecs-sample-project/f2d77f0d6fa5b632683a03742c66dac3.template
+      TemplateURL: ./create-vpc.yaml
       Parameters:
         Name:
           Ref: AWS::StackName
-        VpcCIDR: 10.215.0.0/16
-        Subnet1CIDR: 10.215.10.0/24
-        Subnet2CIDR: 10.215.20.0/24
+        VpcCIDR: 192.168.0.0/16
+        Subnet1CIDR: 192.168.1.0/24
+        Subnet2CIDR: 192.168.2.0/24
+
   LoadBalancer:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/ecs-sample-project/ba55dc4140be0078067f2388f7d12507.template
+      TemplateURL: ./create-loadbalancer.yaml
       Parameters:
         VpcId:
           Fn::GetAtt:
@@ -28,7 +29,7 @@ Resources:
   Cluster:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/ecs-sample-project/6588095febaacbee9e22563b23c4da0e.template
+      TemplateURL: ./create-ecs-cluster.yaml
       Parameters:
         Environment: dev
         VpcId:
@@ -46,7 +47,7 @@ Resources:
   Service:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/ecs-sample-project/4a1dc7303250dd3108e6d94d2966e5ee.template
+      TemplateURL: ./create-ecs-service.yaml
       Parameters:
         Cluster:
           Fn::GetAtt:

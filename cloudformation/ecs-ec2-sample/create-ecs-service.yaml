@@ -38,7 +38,6 @@ Resources:
 
   EC2Service:
     Type: AWS::ECS::Service
-    Condition: EC2
     Properties:
       Cluster: !Ref Cluster
       DesiredCount: !Ref DesiredCount

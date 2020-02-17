@@ -66,9 +66,9 @@ Resources:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: !Ref AWS::StackName
-    Tags:
-      - Key: Environment
-        Value: !Ref Environment
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -78,19 +78,19 @@ Resources:
       MinSize: !Ref ClusterSize
       MaxSize: !Ref ClusterSize
       DesiredCapacity: !Ref ClusterSize
-      Tags:
+      Tags: 
         - Key: Name
           Value: !Sub ${AWS::StackName} - ECS Host
           PropagateAtLaunch: true
-      CreatePolicy:
-        ResourceSignal:
-          Timeout: PT15M
-      UpdatePolicy:
-        AutoScalingRollingUpdate:
-          MinInstancesInService: 1
-          MaxBatchSize: 1
-          PauseTime: PT15M
-          WaitOnResourceSignals: true
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MinInstancesInService: 1
+        MaxBatchSize: 1
+        PauseTime: PT15M
+        WaitOnResourceSignals: true
 
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
