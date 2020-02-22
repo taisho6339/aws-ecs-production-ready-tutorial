@@ -14,6 +14,7 @@ This contains some contents below.
 - CircleCI Account
     - Set environments below in each context
         - AWS_ECR_ACCOUNT_URL
+        - AWS_ECR_REPO_NAME 
         - AWS_ACCESS_KEY_ID
         - AWS_SECRET_ACCESS_KEY
         - AWS_REGION_NAME 
