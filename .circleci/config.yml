@@ -22,6 +22,4 @@ workflows:
           context: deploy-sample-ecs-app
           filters:
             branches:
-              only: /.*/
-            tags:
-              ignore: /.*/
+              only: /master/
