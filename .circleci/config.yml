@@ -1,0 +1,27 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@0.1.16
+  aws-ecr: circleci/aws-ecr@6.3.0
+
+jobs:
+  build_and_push_image:
+    executor: aws-ecr/default
+    steps:
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          repo: ${CIRCLE_PROJECT_REPONAME}
+          region: AWS_DEFAULT_REGION
+          tag: "${CIRCLE_SHA1}"
+
+workflows:
+  version: 2
+  deployment:
+    jobs:
+      - build_and_push_image:
+          context: deploy-sample-ecs-app
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              ignore: /.*/
