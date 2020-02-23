@@ -28,7 +28,7 @@ This contains some contents below.
 aws2 --profile taisho6339 \
 cloudformation package \
 --s3-bucket ecs-sample-project \
---template-file deployments/cloudformation/ec2-mode/bootstrap-template.yml \
+--template-file deployments/ec2-cluster/cloudformation/bootstrap-template.yml \
 --output-template-file deployments/cloudformation/ec2-mode/bootstrap.yml   
 ```
 
@@ -36,7 +36,7 @@ cloudformation package \
 ```sh
 aws2 --profile taisho6339 \
 cloudformation deploy \
---template-file deployments/cloudformation/ec2-mode/bootstrap.yml \
+--template-file deployments/ec2-cluster/cloudformation/bootstrap.yml \
 --stack-name ec2-sample-cluster \
 --capabilities CAPABILITY_IAM \
 --parameter-overrides ImageName=[YOUR_ECR_IMAGE_URI] 
@@ -53,5 +53,5 @@ WIP.
 aws2 --profile taisho6339 \
 cloudformation create-stack \
 --stack-name ecs-study-ecr \
---template-body file://deployments/cloudformation/ec2-mode/create-ecr.yaml
+--template-body file://deployments/ecr/cloudformation/create-ecr.yaml
 ```

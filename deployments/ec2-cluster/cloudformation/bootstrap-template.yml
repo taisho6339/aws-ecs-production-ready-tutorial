@@ -4,6 +4,7 @@ Description: ECS Provisioning Template
 Parameters:
   ImageName:
     Type: String
+    Default: "745265301733.dkr.ecr.ap-northeast-1.amazonaws.com/ecs-s-repos-wp5miobujgli:a6ff7ce846909558a0aa6076d397feb2f7487f68"
 
 Resources:
   VPC:
