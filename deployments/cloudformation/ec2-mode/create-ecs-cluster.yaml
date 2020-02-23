@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: ECR Provisioning Template
+Description: ECS Cluster Provisioning Template
 
 Parameters:
   Environment:
@@ -30,7 +30,7 @@ Parameters:
 
   InstanceType:
     Type: String
-    Default: t2.micro
+    Default: t3.small
 
 Resources:
   ECSRole:

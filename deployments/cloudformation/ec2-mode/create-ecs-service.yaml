@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-Description: ECR Provisioning Template
+Description: ECS Service Provisioning Template
 
 Parameters:
   Cluster:
@@ -65,7 +65,6 @@ Resources:
         - Name: ecs-ec2-sample-app
           Image: !Ref ImageName
           Essential: true
-          Memory: 256
           PortMappings:
             - ContainerPort: 8080
           LogConfiguration:

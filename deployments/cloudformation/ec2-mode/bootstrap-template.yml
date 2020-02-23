@@ -1,5 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: ECR Provisioning Template
+Description: ECS Provisioning Template
+
+Parameters:
+  ImageName:
+    Type: String
 
 Resources:
   VPC:
@@ -61,3 +65,4 @@ Resources:
           Fn::GetAtt:
             - VPC
             - Outputs.Subnets
+        ImageName: !Ref ImageName
