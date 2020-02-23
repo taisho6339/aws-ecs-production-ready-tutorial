@@ -42,7 +42,7 @@ Resources:
     DependsOn: LoadBalancer
     Properties:
       VpcId: !Ref VpcId
-      Port: 80
+      Port: 8080
       Protocol: HTTP
       Matcher:
         HttpCode: 200-299
@@ -68,7 +68,6 @@ Resources:
       Actions:
         - TargetGroupArn: !Ref TargetGroup
           Type: forward
-
 
 Outputs:
   TargetGroup:

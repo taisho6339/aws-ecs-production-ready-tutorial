@@ -59,7 +59,9 @@ Resources:
       GroupDescription: !Sub ${AWS::StackName}-hosts
       SecurityGroupIngress:
         - SourceSecurityGroupId: !Ref SourceSecurityGroup
-          IpProtocol: 80
+          IpProtocol: "TCP"
+          FromPort: 8080
+          ToPort: 8080
       VpcId: !Ref VpcId
 
   Cluster:
