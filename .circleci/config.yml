@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@0.1.16
   aws-ecr: circleci/aws-ecr@6.3.0
+  aws-ecs: circleci/aws-ecs@1.1.0
 
 jobs:
   build_and_push_image:
@@ -14,6 +15,22 @@ jobs:
           region: AWS_DEFAULT_REGION
           tag: "${CIRCLE_SHA1}"
 
+  register_task_definition:
+    docker:
+      - image: circleci/python:3.7.1
+    steps:
+      - checkout
+      - aws-cli/setup:
+          profile-name: default
+      - run: >-
+          cat deployments/ec2-cluster/task_definition_skelton.json |
+            jq '.executionRoleArn |= "'${AWS_ECS_TASK_EXEC_ROLE_ARN}'"' |
+            jq '.containerDefinitions[].image |= "'${AWS_ECR_ACCOUNT_URL}/${AWS_ECR_REPO_NAME}:${CIRCLE_SHA1}'"' |
+            jq '.containerDefinitions[].logConfiguration.options["awslogs-group"] |= "'/ecs/${AWS_LOG_GROUP_NAME}'"' |
+            jq '.containerDefinitions[].logConfiguration.options["awslogs-stream-prefix"] = "'${AWS_LOG_GROUP_NAME}'"' >> ./task_definition.json
+      - aws-ecs/update-task-definition-from-json:
+          task-definition-json: task_definition.json
+
 workflows:
   version: 2
   deployment:
@@ -23,3 +40,10 @@ workflows:
           filters:
             branches:
               only: /master/
+      - register_task_definition:
+          context: deploy-sample-ecs-app
+          filters:
+            branches:
+              only: /master/
+          requires:
+            - build_and_push_image
