@@ -30,13 +30,12 @@ jobs:
             jq '.containerDefinitions[].logConfiguration.options["awslogs-stream-prefix"] = "'${AWS_LOG_GROUP_NAME}'"' >> ./task_definition.json
       - aws-ecs/update-task-definition-from-json:
           task-definition-json: task_definition.json
-      - run: >-
-          export TASK_REVISION=`aws ecs list-task-definitions --sort DESC --status ACTIVE --max-items 1 | jq -r ".taskDefinitionArns[0]" | cut -d '/' -f 2`
-      - run: >-
-          aws ecs update-service \
-            --cluster ec2-sample-cluster-Cluster-HDHM2SWQDYWG \
-            --service ec2-sample-cluster-Service-1DRE2ECLN1E1L-EC2Service-12EHYLMGM8EIM \
-            --task-definition ${TASK_REVISION}
+      - run:
+          command: |
+            export CLUSTER_NAME=ec2-sample-cluster-Cluster-HDHM2SWQDYWG
+            export SERVICE_NAME=ec2-sample-cluster-Service-1DRE2ECLN1E1L-EC2Service-12EHYLMGM8EIM
+            export TASK_REVISION=`aws ecs list-task-definitions --sort DESC --status ACTIVE --max-items 1 | jq -r ".taskDefinitionArns[0]" | cut -d '/' -f 2`
+            aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --task-definition ${TASK_REVISION}
 
 workflows:
   version: 2
