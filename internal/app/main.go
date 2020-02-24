@@ -17,7 +17,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", withLogging(func(writer http.ResponseWriter, request *http.Request) {
 		writer.WriteHeader(http.StatusOK)
-		if _, err := writer.Write([]byte(`{"message": "Hello World"}`)); err != nil {
+		if _, err := writer.Write([]byte(`{"message": "Updated Hello World"}`)); err != nil {
 			log.Println(fmt.Sprintf("[ERROR] %v", err))
 		}
 	}))
