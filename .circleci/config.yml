@@ -23,7 +23,7 @@ jobs:
       - aws-cli/setup:
           profile-name: default
       - run: >-
-          cat deployments/ec2-cluster/task_definition_skelton.json |
+          cat deployments/fargate-cluster/task_definition_skelton.json |
             jq '.executionRoleArn |= "'${AWS_ECS_TASK_EXEC_ROLE_ARN}'"' |
             jq '.containerDefinitions[].image |= "'${AWS_ECR_ACCOUNT_URL}/${AWS_ECR_REPO_NAME}:${CIRCLE_SHA1}'"' |
             jq '.containerDefinitions[].logConfiguration.options["awslogs-group"] |= "'/ecs/${AWS_LOG_GROUP_NAME}'"' |
@@ -32,8 +32,6 @@ jobs:
           task-definition-json: task_definition.json
       - run:
           command: |
-            export CLUSTER_NAME=ec2-sample-cluster-Cluster-HDHM2SWQDYWG
-            export SERVICE_NAME=ec2-sample-cluster-Service-1DRE2ECLN1E1L-EC2Service-12EHYLMGM8EIM
             export TASK_REVISION=`aws ecs list-task-definitions --sort DESC --status ACTIVE --max-items 1 | jq -r ".taskDefinitionArns[0]" | cut -d '/' -f 2`
             aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --task-definition ${TASK_REVISION}
 

@@ -29,7 +29,7 @@ aws2 --profile taisho6339 \
 cloudformation package \
 --s3-bucket ecs-sample-project \
 --template-file deployments/ec2-cluster/cloudformation/bootstrap-template.yml \
---output-template-file deployments/cloudformation/ec2-mode/bootstrap.yml   
+--output-template-file deployments/ec2-cluster/cloudformation/bootstrap.yml   
 ```
 
 2. Deploy stack in CloudFormation
@@ -43,7 +43,23 @@ cloudformation deploy \
 ```
 
 ### Fargate
-WIP.
+1. Package templates in CloudFormation
+```sh
+aws2 --profile taisho6339 \
+cloudformation package \
+--s3-bucket ecs-sample-project \
+--template-file deployments/fargate-cluster/cloudformation/bootstrap-template.yml \
+--output-template-file deployments/fargate-cluster/cloudformation/bootstrap.yml   
+```
+
+2. Deploy stack in CloudFormation
+```sh
+aws2 --profile taisho6339 \
+cloudformation deploy \
+--template-file deployments/fargate-cluster/cloudformation/bootstrap.yml \
+--stack-name fargate-sample-cluster \
+--capabilities CAPABILITY_IAM 
+```
 
 
 ## Create ECR

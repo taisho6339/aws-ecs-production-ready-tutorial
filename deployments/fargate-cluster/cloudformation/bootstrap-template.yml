@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ECS Provisioning Template
+
+Parameters:
+  ImageName:
+    Type: String
+    Default: "745265301733.dkr.ecr.ap-northeast-1.amazonaws.com/ecs-s-repos-wp5miobujgli:6a045f1e0151cffea8b840a40356e93f83d263dc"
+
+Resources:
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./create-vpc.yaml
+      Parameters:
+        Name:
+          Ref: AWS::StackName
+        VpcCIDR: 192.168.0.0/16
+        Subnet1CIDR: 192.168.1.0/24
+        Subnet2CIDR: 192.168.2.0/24
+
+  LoadBalancer:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./create-loadbalancer.yaml
+      Parameters:
+        VpcId:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.VpcId
+        Subnets:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.Subnets
+
+  Cluster:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./create-ecs-cluster.yaml
+      Parameters:
+        Environment: dev
+
+  Service:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./create-ecs-service.yaml
+      Parameters:
+        Cluster:
+          Fn::GetAtt:
+            - Cluster
+            - Outputs.ClusterName
+        TargetGroup:
+          Fn::GetAtt:
+            - LoadBalancer
+            - Outputs.TargetGroup
+        VpcId:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.VpcId
+        Subnets:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.Subnets
+        SourceSecurityGroup:
+          Fn::GetAtt:
+            - LoadBalancer
+            - Outputs.SecurityGroup
+        ImageName: !Ref ImageName

@@ -1,0 +1,50 @@
+{
+  "executionRoleArn": "[TO_BE_REPLACED]",
+  "containerDefinitions": [
+    {
+      "dnsSearchDomains": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": [],
+        "options": {
+          "awslogs-group": "[TO_BE_REPLACED]",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-stream-prefix": "[TO_BE_REPLACED]"
+        }
+      },
+      "entryPoint": [],
+      "portMappings": [
+        {
+          "hostPort": 8080,
+          "protocol": "tcp",
+          "containerPort": 8080
+        }
+      ],
+      "command": [],
+      "cpu": 0,
+      "environment": [],
+      "ulimits": [],
+      "dnsServers": [],
+      "mountPoints": [],
+      "secrets": [],
+      "dockerSecurityOptions": [],
+      "volumesFrom": [],
+      "image": "[TO_BE_REPLACED]",
+      "essential": true,
+      "links": [],
+      "extraHosts": [],
+      "dockerLabels": {},
+      "systemControls": [],
+      "name": "ecs-fargate-sample-app"
+    }
+  ],
+  "placementConstraints": [],
+  "memory": "512",
+  "family": "ecs-ec2-sample-app",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "256",
+  "volumes": []
+}
