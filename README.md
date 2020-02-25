@@ -14,6 +14,8 @@ This contains some contents below.
 - AWS CLI Authenticate
 - CircleCI Account
     - Set environments below in each context
+        - CLUSTER_NAME
+        - SERVICE_NAME
         - AWS_ECR_ACCOUNT_URL
         - AWS_ECR_REPO_NAME 
         - AWS_ACCESS_KEY_ID
