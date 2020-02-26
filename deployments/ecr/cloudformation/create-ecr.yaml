@@ -2,6 +2,14 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: ECR Provisioning Template
 
 Resources:
-  Repository:
+  AppRepository:
     Type: AWS::ECR::Repository
-    DeletionPolicy: Delete
+    DeletionPolicy: Retain
+    Properties:
+      RepositoryName: app
+
+  BatchRepository:
+    Type: AWS::ECR::Repository
+    DeletionPolicy: Retain
+    Properties:
+      RepositoryName: batch

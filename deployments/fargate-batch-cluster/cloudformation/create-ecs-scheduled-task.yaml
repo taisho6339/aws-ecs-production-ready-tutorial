@@ -34,7 +34,7 @@ Resources:
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub /ecs/fargate-batch-cluster
+      LogGroupName: /ecs/fargate-batch-cluster
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
