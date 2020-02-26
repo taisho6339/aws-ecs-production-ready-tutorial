@@ -1,0 +1,77 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ECS Service Provisioning Template
+
+Parameters:
+  Cluster:
+    Type: String
+
+  Subnets:
+    Type: List<AWS::EC2::Subnet::Id>
+
+  ImageName:
+    Type: String
+
+  TaskDesiredCount:
+    Type: Number
+    Default: 1
+
+Resources:
+  TaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /ecs/fargate-batch-cluster
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: fargate-batch-sample
+      RequiresCompatibilities:
+        - "FARGATE"
+      Memory: 512
+      Cpu: 256
+      NetworkMode: "awsvpc"
+      ExecutionRoleArn: !Ref TaskExecutionRole
+      ContainerDefinitions:
+        - Name: fargate-batch-sample
+          Image: !Ref ImageName
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref LogGroup
+              awslogs-stream-prefix: !Ref AWS::StackName
+
+  BatchSchedule:
+    Type: AWS::Events::Rule
+    Description: ''
+    Properties:
+      State: ENABLED
+      ScheduleExpression: cron(0/1 * * * ? *)
+      Name: fargate-batch-sample-schedule-rule
+      Targets:
+        - Id: fargate-batch-sample-schedule-rule
+          Arn: !Ref Cluster
+          RoleArn: !Ref TaskExecutionRole
+          EcsParameters:
+            TaskDefinitionArn: !Ref TaskDefinition
+            TaskCount: !Ref TaskDesiredCount
+            LaunchType: FARGATE
+            NetworkConfiguration:
+              AwsVpcConfiguration:
+                AssignPublicIp: DISABLED
+                Subnets: !Ref Subnets

@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ECS Provisioning Template
+
+Parameters:
+  ImageName:
+    Type: String
+    Default: "745265301733.dkr.ecr.ap-northeast-1.amazonaws.com/ecs-s-repos-wp5miobujgli:6a045f1e0151cffea8b840a40356e93f83d263dc"
+
+Resources:
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./create-vpc.yaml
+      Parameters:
+        Name:
+          Ref: fargate-batch-cluster-vpc
+        VpcCIDR: 192.168.0.0/16
+        Subnet1CIDR: 192.168.1.0/24
+        Subnet2CIDR: 192.168.2.0/24
+
+  Cluster:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./create-ecs-cluster.yaml
+      Parameters:
+        Environment: dev
+
+  ScheduledTask:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./create-ecs-scheduled-task.yaml
+      Parameters:
+        Cluster:
+          Fn::GetAtt:
+            - Cluster
+            - Outputs.ClusterName
+        Subnets:
+          Fn::GetAtt:
+            - VPC
+            - Outputs.Subnets
+        ImageName: !Ref ImageName

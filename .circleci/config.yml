@@ -6,7 +6,7 @@ orbs:
   aws-ecs: circleci/aws-ecs@1.1.0
 
 jobs:
-  build_and_push_image:
+  app_build_and_push_image:
     executor: aws-ecr/default
     steps:
       - aws-ecr/build-and-push-image:
@@ -14,8 +14,19 @@ jobs:
           repo: "${AWS_ECR_REPO_NAME}"
           region: AWS_DEFAULT_REGION
           tag: "${CIRCLE_SHA1}"
+          path: Dockerfiles/app
 
-  deploy:
+  batch_build_and_push_image:
+    executor: aws-ecr/default
+    steps:
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          repo: "${AWS_ECR_REPO_NAME}"
+          region: AWS_DEFAULT_REGION
+          tag: "${CIRCLE_SHA1}"
+          path: Dockerfiles/batch
+
+  deploy_app:
     docker:
       - image: circleci/python:3.7.1
     steps:
@@ -39,12 +50,17 @@ workflows:
   version: 2
   deployment:
     jobs:
-      - build_and_push_image:
+      - app_build_and_push_image:
           context: deploy-sample-ecs-app
           filters:
             branches:
               only: /master/
-      - deploy:
+      - batch_build_and_push_image:
+          context: deploy-sample-ecs-app
+          filters:
+            branches:
+              only: /master/
+      - deploy_app:
           context: deploy-sample-ecs-app
           filters:
             branches:

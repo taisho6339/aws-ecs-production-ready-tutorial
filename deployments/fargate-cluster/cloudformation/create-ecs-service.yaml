@@ -58,6 +58,7 @@ Resources:
     Type: AWS::ECS::Service
     Properties:
       Cluster: !Ref Cluster
+      ServiceName: ecs-fargate-sample-service
       DesiredCount: !Ref DesiredCount
       TaskDefinition: !Ref TaskDefinition
       LaunchType: FARGATE

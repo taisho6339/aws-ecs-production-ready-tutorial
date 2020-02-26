@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ECS Cluster Provisioning Template
+
+Parameters:
+  Environment:
+    Description: "environment type"
+    Type: String
+    Default: dev
+    AllowedValues:
+      - prod
+      - stage
+      - dev
+
+Resources:
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: fargate-batch-cluster
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+
+Outputs:
+  ClusterName:
+    Value: !Ref Cluster
