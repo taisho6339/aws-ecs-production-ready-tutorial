@@ -9,24 +9,22 @@ jobs:
   app_build_and_push_image:
     executor: aws-ecr/default
     steps:
-      - checkout
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
           repo: "${AWS_ECR_REPO_NAME}"
           region: AWS_DEFAULT_REGION
           tag: "${CIRCLE_SHA1}"
-          path: ./Dockerfiles/app
+          dockerfile: Dockerfile.app
 
   batch_build_and_push_image:
     executor: aws-ecr/default
     steps:
-      - checkout
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
           repo: "${AWS_ECR_REPO_NAME}"
           region: AWS_DEFAULT_REGION
           tag: "${CIRCLE_SHA1}"
-          path: ./Dockerfiles/batch
+          dockerfile: Dockerfile.batch
 
   deploy_app:
     docker:
