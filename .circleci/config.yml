@@ -66,4 +66,4 @@ workflows:
             branches:
               only: /master/
           requires:
-            - build_and_push_image
+            - app_build_and_push_image
