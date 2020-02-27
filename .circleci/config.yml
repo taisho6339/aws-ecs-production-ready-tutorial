@@ -11,7 +11,7 @@ jobs:
     steps:
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
-          repo: "${AWS_ECR_REPO_NAME}"
+          repo: app
           region: AWS_DEFAULT_REGION
           tag: "${CIRCLE_SHA1}"
           dockerfile: Dockerfile.app
@@ -21,7 +21,7 @@ jobs:
     steps:
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
-          repo: "${AWS_ECR_REPO_NAME}"
+          repo: batch
           region: AWS_DEFAULT_REGION
           tag: "${CIRCLE_SHA1}"
           dockerfile: Dockerfile.batch
