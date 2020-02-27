@@ -22,4 +22,7 @@ Resources:
 
 Outputs:
   ClusterName:
-    Value: !Ref Cluster
+    Value:
+      Fn::GetAtt:
+        - Cluster
+        - Arn

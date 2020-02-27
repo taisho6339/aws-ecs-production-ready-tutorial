@@ -17,7 +17,6 @@ This contains some contents below.
         - CLUSTER_NAME
         - SERVICE_NAME
         - AWS_ECR_ACCOUNT_URL
-        - AWS_ECR_REPO_NAME 
         - AWS_ACCESS_KEY_ID
         - AWS_SECRET_ACCESS_KEY
         - AWS_REGION_NAME 
@@ -63,6 +62,24 @@ cloudformation deploy \
 --capabilities CAPABILITY_IAM 
 ```
 
+### Fargate Scheduled Task
+1. Package templates in CloudFormation
+```sh
+aws2 --profile taisho6339 \
+cloudformation package \
+--s3-bucket ecs-sample-project \
+--template-file deployments/fargate-batch-cluster/cloudformation/bootstrap-template.yml \
+--output-template-file deployments/fargate-batch-cluster/cloudformation/bootstrap.yml   
+```
+
+2. Deploy stack in CloudFormation
+```sh
+aws2 --profile taisho6339 \
+cloudformation deploy \
+--template-file deployments/fargate-batch-cluster/cloudformation/bootstrap.yml \
+--stack-name fargate-batch-sample-cluster \
+--capabilities CAPABILITY_IAM 
+```
 
 ## Create ECR
 
