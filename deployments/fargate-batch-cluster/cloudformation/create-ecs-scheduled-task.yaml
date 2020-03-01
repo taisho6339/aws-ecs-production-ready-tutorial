@@ -54,7 +54,7 @@ Resources:
             Options:
               awslogs-region: !Ref AWS::Region
               awslogs-group: !Ref LogGroup
-              awslogs-stream-prefix: !Ref AWS::StackName
+              awslogs-stream-prefix: fargate-batch-sample
 
   BatchSchedule:
     Type: AWS::Events::Rule
@@ -65,11 +65,8 @@ Resources:
       Name: fargate-batch-sample-schedule-rule
       Targets:
         - Id: fargate-batch-sample-schedule-rule
+          RoleArn: !GetAtt TaskExecutionRole.Arn
           Arn: !Ref Cluster
-          RoleArn:
-            Fn::GetAtt:
-              - TaskExecutionRole
-              - Arn
           EcsParameters:
             TaskDefinitionArn: !Ref TaskDefinition
             TaskCount: !Ref TaskDesiredCount

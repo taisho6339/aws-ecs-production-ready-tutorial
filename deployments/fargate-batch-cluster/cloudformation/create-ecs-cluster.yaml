@@ -21,8 +21,5 @@ Resources:
           Value: !Ref Environment
 
 Outputs:
-  ClusterName:
-    Value:
-      Fn::GetAtt:
-        - Cluster
-        - Arn
+  Cluster:
+    Value: !GetAtt Cluster.Arn

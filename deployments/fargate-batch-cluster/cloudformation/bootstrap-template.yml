@@ -32,7 +32,7 @@ Resources:
         Cluster:
           Fn::GetAtt:
             - Cluster
-            - Outputs.ClusterName
+            - Outputs.Cluster
         Subnets:
           Fn::GetAtt:
             - VPC
