@@ -45,7 +45,7 @@ Resources:
       Memory: 512
       Cpu: 256
       NetworkMode: "awsvpc"
-      ExecutionRoleArn: !Ref TaskExecutionRole
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
       ContainerDefinitions:
         - Name: fargate-batch-sample
           Image: !Ref ImageName
@@ -56,6 +56,34 @@ Resources:
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: fargate-batch-sample
 
+  BatchScheduleIAMPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: Batch-Schadule-Policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - ecs:RunTask
+              - iam:PassRole
+            Resource: "*"
+
+  BatchScheduleIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Batch-Schadule-Policy-Role
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Ref BatchScheduleIAMPolicy
+
   BatchSchedule:
     Type: AWS::Events::Rule
     Description: ''
@@ -65,7 +93,7 @@ Resources:
       Name: fargate-batch-sample-schedule-rule
       Targets:
         - Id: fargate-batch-sample-schedule-rule
-          RoleArn: !GetAtt TaskExecutionRole.Arn
+          RoleArn: !GetAtt BatchScheduleIAMRole.Arn
           Arn: !Ref Cluster
           EcsParameters:
             TaskDefinitionArn: !Ref TaskDefinition
