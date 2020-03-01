@@ -65,10 +65,7 @@ Resources:
       Name: fargate-batch-sample-schedule-rule
       Targets:
         - Id: fargate-batch-sample-schedule-rule
-          Arn:
-            Fn::GetAtt:
-              - Cluster
-              - Arn
+          Arn: !Ref Cluster
           RoleArn:
             Fn::GetAtt:
               - TaskExecutionRole
