@@ -65,7 +65,10 @@ Resources:
       Name: fargate-batch-sample-schedule-rule
       Targets:
         - Id: fargate-batch-sample-schedule-rule
-          Arn: !Ref Cluster
+          Arn:
+            Fn::GetAtt:
+              - Cluster
+              - Arn
           RoleArn:
             Fn::GetAtt:
               - TaskExecutionRole
@@ -76,5 +79,5 @@ Resources:
             LaunchType: FARGATE
             NetworkConfiguration:
               AwsVpcConfiguration:
-                AssignPublicIp: DISABLED
+                AssignPublicIp: ENABLED
                 Subnets: !Ref Subnets
